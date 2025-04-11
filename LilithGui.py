@@ -7,13 +7,13 @@ from PyQt5.QtWidgets import (
     QSpinBox, QDoubleSpinBox, QFileDialog, QTextEdit, QCheckBox
 )
 from PyQt5.QtCore import Qt
-from launcher import run_simulation
+from lilithlauncher import run_simulation
 
 class LilithGUI(QWidget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Lilith: Collapse Engine GUI")
-        self.setGeometry(100, 100, 400, 460)
+        self.setGeometry(100, 100, 400, 500)
         self.init_ui()
 
     def init_ui(self):
@@ -68,11 +68,15 @@ class LilithGUI(QWidget):
         self.inject_button.clicked.connect(self.inject_observer)
         observer_layout.addWidget(self.inject_button)
 
-        # Live preview toggle
+        # Live preview and video toggle
         preview_layout = QHBoxLayout()
         self.preview_check = QCheckBox("Enable Live Preview (slower)")
         self.preview_check.setChecked(False)
         preview_layout.addWidget(self.preview_check)
+
+        self.video_check = QCheckBox("Export Video After Render")
+        self.video_check.setChecked(True)
+        preview_layout.addWidget(self.video_check)
 
         # Status display
         output_path_layout = QHBoxLayout()
@@ -106,10 +110,11 @@ class LilithGUI(QWidget):
         alpha = self.alpha_spin.value()
         steps = self.step_spin.value()
         live_preview = self.preview_check.isChecked()
+        export_video = self.video_check.isChecked()
 
-        self.status_display.append(f"\n🩸 Running Lilith...\nGrid: {size}³ | Alpha: {alpha} | Steps: {steps} | Preview: {live_preview}")
+        self.status_display.append(f"\n🩸 Running Lilith...\nGrid: {size}³ | Alpha: {alpha} | Steps: {steps} | Preview: {live_preview} | Video: {export_video}")
         try:
-            output_dir = run_simulation(size, alpha, steps)  # Add return to launcher.py
+            output_dir = run_simulation(size, alpha, steps, export_video=export_video)
             self.status_display.append("✅ Lilith run complete.")
             self.output_label.setText(f"Output Dir: {output_dir}")
         except Exception as e:

@@ -1,4 +1,4 @@
-# launcher.py — Entry point for Lilith Collapse Engine
+# lilithlauncher.py — Entry point for Lilith Collapse Engine
 
 import argparse
 import os
